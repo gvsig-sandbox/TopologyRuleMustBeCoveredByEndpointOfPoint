@@ -24,7 +24,81 @@ class MustBeCoveredByEndpointOfPointRule(AbstractTopologyRule):
     
     def check(self, taskStatus, report, feature1):
         try:
-            
+            store2 = self.getDataSet2().getFeatureStore()
+            if self.expression == None:
+                manager = ExpressionEvaluatorLocator.getManager()
+                self.expression = manager.createExpression()
+                self.expressionBuilder = manager.createExpressionBuilder()
+                self.geomName = store2.getDefaultFeatureType().getDefaultGeometryAttributeName()
+            point1 = feature1.getDefaultGeometry()
+            tolerance1 = self.getTolerance()
+            theDataSet2 = self.getDataSet2()
+            if theDataSet2.getSpatialIndex() != None:
+                if point1.getGeometryType().getName() == "Point2D":
+                    buffer1 = point1.buffer(tolerance1)
+                    contains = False
+                    for featureReference in theDataSet2.query(buffer1):
+                        feature2 = featureReference.getFeature()
+                        line2 = feature2.getDefaultGeometry()
+                        if line2.getGeometryType().getName() == "Line2D":
+                            numVertices = line2.getNumVertices()
+                            if buffer1.contains(line2.getVertex(0)) or buffer1.contains(line2.getVertex(numVertices)):
+                                contains = True
+                                break
+                        else:
+                            if line2.getGeometryType().getName() == "MultiLineLine2D":
+                                n2 = line2.getPrimitivesNumber()
+                                for i in range(0, n2 + 1):
+                                    curve2 = line2.getCurveAt(i)
+                                    numVertices = curve2.getNumVertices()
+                                    if buffer1.contains(curve2.getVertex(0)) or buffer1.contains(curve2.getVertex(numVertices)):
+                                        contains = True
+                                        break
+                    if not contains:
+                        report.addLine(self,
+                                    self.getDataSet1(),
+                                    self.getDataSet2(),
+                                    point1,
+                                    point1,
+                                    feature1.getReference(), 
+                                    None,
+                                    False,
+                                    "The point is not covered by endpoint."
+                        )
+                else:
+                    if point1.getGeometryType().getName() == "MultiPoint2D":
+                        n1 = point1.getPrimitivesNumber()
+                        for i in range(0, n1 + 1):
+                            buffer1 = point1.getPointAt(i).buffer(tolerance1)
+                            contains = False
+                            for featureReference in theDataSet2.query(buffer1):
+                                feature2 = featureReference.getFeature()
+                                line2 = feature2.getDefaultGeometry()
+                                if line2.getGeometryType().getName() == "Line2D":
+                                    numVertices = line2.getNumVertices()
+                                    if buffer1.contains(line2.getVertex(0)) or buffer1.contains(line2.getVertex(numVertices)):
+                                        contains = True
+                                        break
+                                else:
+                                    if line2.getGeometryType().getName() == "MultiLineLine2D":
+                                        n2 = line2.getPrimitivesNumber()
+                                        for j in range(0, n2 + 1):
+                                            curve2 = line2.getCurveAt(j)
+                                            numVertices = curve2.getNumVertices()
+                                            if buffer1.contains(curve2.getVertex(0)) or buffer1.contains(curve2.getVertex(numVertices)):
+                                                contains = True
+                                                break
+                            if not contains:
+                                report.addLine(self,
+                                            self.getDataSet1(),
+                                            self.getDataSet2(),
+                                            point1.getPointAt(i),
+                                            point1.getPointAt(i),
+                                            feature1.getReference(), 
+                                            None,
+                                            False,
+                                            "The point is not covered by endpoint."
+                                )
         except:
             ex = sys.exc_info()[1]
             gvsig.logger("Can't execute rule. Class Name: " + ex.__class__.__name__ + ". Exception: " + str(ex), gvsig.LOGGER_ERROR)
