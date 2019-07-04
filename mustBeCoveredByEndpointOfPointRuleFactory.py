@@ -20,10 +20,7 @@ class MustBeCoveredByEndpointOfPointRuleFactory(AbstractTopologyRuleFactory):
             self,
             "MustBeCoveredByEndpointOfPoint",
             "Must Be Covered ByEndpoint Of",
-            "This rule requires that the point in on layer must be covered by the ends of lines in another layer",
-            "so points errors are created on the points that are not covered by the ends of lines.",
-            "For example, this rule is useful when is needed that street intersections",
-            "must be covered by the endpoints of street centerlines",
+            "This rule requires that the point in on layer must be covered by the ends of lines in another layer so points errors are created on the points that are not covered by the ends of lines. For example, this rule is useful when is needed that street intersections must be covered by the endpoints of street centerlines",
             ListBuilder().add(Geometry.TYPES.POINT).add(Geometry.TYPES.MULTIPOINT).asList(),
             ListBuilder().add(Geometry.TYPES.CURVE).add(Geometry.TYPES.MULTICURVE).asList()
         )
