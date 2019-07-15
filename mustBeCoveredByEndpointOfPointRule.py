@@ -46,7 +46,7 @@ class MustBeCoveredByEndpointOfPointRule(AbstractTopologyRule):
                                 contains = True
                                 break
                         else:
-                            if line2.getGeometryType().getName() == "MultiLineLine2D":
+                            if line2.getGeometryType().getName() == "MultiLine2D":
                                 n2 = line2.getPrimitivesNumber()
                                 for i in range(0, n2 + 1):
                                     curve2 = line2.getCurveAt(i)
@@ -80,7 +80,7 @@ class MustBeCoveredByEndpointOfPointRule(AbstractTopologyRule):
                                         contains = True
                                         break
                                 else:
-                                    if line2.getGeometryType().getName() == "MultiLineLine2D":
+                                    if line2.getGeometryType().getName() == "MultiLine2D":
                                         n2 = line2.getPrimitivesNumber()
                                         for j in range(0, n2 + 1):
                                             curve2 = line2.getCurveAt(j)
