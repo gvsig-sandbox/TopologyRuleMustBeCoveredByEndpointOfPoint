@@ -16,7 +16,7 @@
             "This action delete the point errors",
 	    "Delete Point action, delete the entities that do not comply the rule",
 	    " This action removes point that not comply the rule,",
-		"so points errors are created on the points that are not covered by the ends of lines."
+            "so points errors are created on the points that are not covered by the ends of lines."
             ]
         }
     }
