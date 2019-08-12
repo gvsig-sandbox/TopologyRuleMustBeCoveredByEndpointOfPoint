@@ -2,7 +2,7 @@
     "id": "MustBeCoveredByEndpointOfPoint",
     "name": "Must Be Covered By Endpoint Of",
     "description": [ 
-        "<img src=\"@@@_d/must_be_covered_by_endpoint_of.png\">\n",     
+        "<img src=\"@@@_d/mustBeCoveredByEndpointOf.png\">\n",     
         " The points in the input layer must be covered by the ends of lines in the coverage layer",
         " so points errors are created on the points that are not covered by the ends of lines.", 
 	" For example, this rule is useful when is needed that street intersections must be covered",
@@ -15,9 +15,8 @@
             "description": [ 
             "This action delete the point errors",
 	    "Delete Point action, delete the entities that do not comply the rule",
-	    " This action removes point features that are not coincident",
-   	    " with the endpoint of line features, so points errors are created",
-	    " on the points that are not covered by the ends of lines."
+	    " This action removes point that not comply the rule,",
+		"so points errors are created on the points that are not covered by the ends of lines."
             ]
         }
     }

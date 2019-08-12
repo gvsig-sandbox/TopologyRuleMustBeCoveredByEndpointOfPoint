@@ -13,7 +13,7 @@ class DeletePointAction(AbstractTopologyRuleAction):
 			"MustBeCoveredByEndpointOfPoint",
             "DeletePointAction",
             "Delete Point Action",
-            ""
+            "This action removes point that are not covered by endpoint of the line, so points errors are created on the points that are not covered by the ends of lines."
         )
     
     def execute(self, rule, line, parameters):

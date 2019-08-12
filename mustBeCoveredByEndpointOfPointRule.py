@@ -24,13 +24,13 @@ class MustBeCoveredByEndpointOfPointRule(AbstractTopologyRule):
         self.addAction(DeletePointAction())
     
     def intersects(self, buffer1, theDataSet2):
-        if theDataSet2.getSpatialIndex() != None:
-            result = False
+        result = False
+        if theDataSet2.getSpatialIndex() != None:            
             for featureReference in theDataSet2.query(buffer1):
                 feature2 = featureReference.getFeature()
                 line2 = feature2.getDefaultGeometry()
                 numVertices = line2.getNumVertices()
-                if buffer1.contains(line2.getVertex(0)) or buffer1.contains(line2.getVertex(numVertices-1)): # numVertices-1 - because the index starts at 0
+                if buffer1.intersects(line2.getVertex(0)) or buffer1.intersects(line2.getVertex(numVertices-1)): # numVertices-1 - because the index starts at 0
                     result = True
                     break
         else:
@@ -50,9 +50,7 @@ class MustBeCoveredByEndpointOfPointRule(AbstractTopologyRule):
                     )
                 ).toString()
             )
-            if theDataSet2.findFirst(self.expression) == None:
-                result = False
-            else:
+            if theDataSet2.findFirst(self.expression) != None:
                 result = True
         return result
     
