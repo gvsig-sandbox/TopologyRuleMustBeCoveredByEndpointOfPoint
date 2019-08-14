@@ -44,12 +44,22 @@ class MustBeCoveredByEndpointOfPointRule(AbstractTopologyRule):
                 self.expressionBuilder.ifnull(
                     self.expressionBuilder.column(self.geomName),
                     self.expressionBuilder.constant(False),
-                    self.expressionBuilder.ST_Intersects(
-                        self.expressionBuilder.geometry(buffer1),
-                        self.expressionBuilder.column(self.geomName)
+                    self.expressionBuilder.or(
+                        self.expressionBuilder.ST_Intersects(
+                            self.expressionBuilder.ffunction(ST_StartPoint(line2.getVertex(0)), self.expressionBuilder.column(self.geomName)),
+                            self.expressionBuilder.geometry(buffer1, CRSFactory.getCRS("EPSG:4326"))
+                        ),
+                        self.expressionBuilder.ST_Intersects(
+                            self.expressionBuilder.function(ST_EndPoint(line2.getVertex(numVertices-1)), self.expressionBuilder.column(self.geomName)),
+                            self.expressionBuilder.geometry(buffer1, CRSFactory.getCRS("EPSG:4326"))
+                        )
                     )
-                ).toString()
-            )
+                    #self.expressionBuilder.ST_Intersects(
+                    #    self.expressionBuilder.geometry(buffer1),
+                    #    self.expressionBuilder.column(self.geomName)
+                    #)
+                    ).toString()
+                )
             if theDataSet2.findFirst(self.expression) != None:
                 result = True
         return result
