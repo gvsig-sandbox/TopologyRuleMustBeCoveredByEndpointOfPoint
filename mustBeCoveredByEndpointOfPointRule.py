@@ -25,12 +25,12 @@ class MustBeCoveredByEndpointOfPointRule(AbstractTopologyRule):
     
     def intersects(self, buffer1, theDataSet2):
         result = False
-        if theDataSet2.getSpatialIndex() != None:            
+        if theDataSet2.getSpatialIndex() != None:
             for featureReference in theDataSet2.query(buffer1):
                 feature2 = featureReference.getFeature()
                 line2 = feature2.getDefaultGeometry()
                 numVertices = line2.getNumVertices()
-                if buffer1.intersects(line2.getVertex(0)) or buffer1.intersects(line2.getVertex(numVertices-1)): # numVertices-1 - because the index starts at 0
+                if buffer1.intersects(line2.getVertex(0)) or buffer1.intersects(line2.getVertex(numVertices - 1)):
                     result = True
                     break
         else:
@@ -46,20 +46,16 @@ class MustBeCoveredByEndpointOfPointRule(AbstractTopologyRule):
                     self.expressionBuilder.constant(False),
                     self.expressionBuilder.or(
                         self.expressionBuilder.ST_Intersects(
-                            self.expressionBuilder.ffunction(ST_StartPoint(line2.getVertex(0)), self.expressionBuilder.column(self.geomName)),
-                            self.expressionBuilder.geometry(buffer1, CRSFactory.getCRS("EPSG:4326"))
+                            self.expressionBuilder.function("ST_StartPoint", self.expressionBuilder.column(self.geomName)),
+                            self.expressionBuilder.geometry(buffer1, buffer1.getProjection())
                         ),
                         self.expressionBuilder.ST_Intersects(
-                            self.expressionBuilder.function(ST_EndPoint(line2.getVertex(numVertices-1)), self.expressionBuilder.column(self.geomName)),
-                            self.expressionBuilder.geometry(buffer1, CRSFactory.getCRS("EPSG:4326"))
+                            self.expressionBuilder.function("ST_EndPoint", self.expressionBuilder.column(self.geomName)),
+                            self.expressionBuilder.geometry(buffer1, buffer1.getProjection())
                         )
                     )
-                    #self.expressionBuilder.ST_Intersects(
-                    #    self.expressionBuilder.geometry(buffer1),
-                    #    self.expressionBuilder.column(self.geomName)
-                    #)
-                    ).toString()
-                )
+                ).toString()
+            )
             if theDataSet2.findFirst(self.expression) != None:
                 result = True
         return result
